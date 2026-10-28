@@ -23,395 +23,205 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="container-fluid px-3">
-      <div class="app-card">
-        <!-- Topo -->
-        <div
-          class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3"
-        >
-          <div>
-            <h4 class="fw-bold mb-1">
-              <i class="fa-solid fa-calendar-check text-primary me-2"></i>Time
-              Off Manager
-            </h4>
-            <div class="text-muted small">
-              Ciclos de Sprint (Dia 16 ao 15) • Painel Trimestral
-            </div>
-          </div>
-          <div class="d-flex flex-wrap gap-2">
-            <button
-              class="btn btn-outline-secondary btn-sm"
-              onclick="abrirModalColaboradores()"
-            >
-              <i class="fa-solid fa-users me-1"></i>Colaboradores
-            </button>
-            <button
-              class="btn btn-outline-secondary btn-sm"
-              onclick="abrirModalTipos()"
-            >
-              <i class="fa-solid fa-tags me-1"></i>Tipos de Ausência
-            </button>
-            <button
-              class="btn btn-outline-secondary btn-sm"
-              onclick="exportarJSON()"
-            >
-              <i class="fa-solid fa-download me-1"></i>Backup JSON
-            </button>
-            <label class="btn btn-outline-secondary btn-sm mb-0">
-              <i class="fa-solid fa-upload me-1"></i>Carregar JSON
-              <input
-                type="file"
-                id="inputJsonFile"
-                accept=".json"
-                style="display: none"
-                onchange="importarJSON(event)"
-              />
-            </label>
-            <button
-              class="btn btn-outline-danger btn-sm"
-              onclick="restaurarDadosPadrao()"
-            >
-              <i class="fa-solid fa-rotate-left me-1"></i>Restaurar
-            </button>
-            <button
-              class="btn btn-primary btn-sm px-3 fw-bold"
-              onclick="abrirModalAfastamento()"
-            >
-              <i class="fa-solid fa-plus me-1"></i>+ Lançar Afastamento
-            </button>
-          </div>
+      <div class="container-fluid px-3">
+    <div class="app-card">
+      <!-- Topo -->
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+        <div>
+          <h4 class="fw-bold mb-1"><i class="fa-solid fa-calendar-check text-primary me-2"></i>Time Off Manager</h4>
+          <div class="text-muted small">Ciclos de Sprint (Dia 16 ao 15) • Painel Semestral Contínuo</div>
         </div>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-outline-secondary btn-sm" onclick="abrirModalColaboradores()"><i class="fa-solid fa-users me-1"></i>Colaboradores</button>
+          <button class="btn btn-outline-secondary btn-sm" onclick="abrirModalTipos()"><i class="fa-solid fa-tags me-1"></i>Tipos de Ausência</button>
+          <button class="btn btn-outline-secondary btn-sm" onclick="exportarJSON()"><i class="fa-solid fa-download me-1"></i>Backup JSON</button>
+          <label class="btn btn-outline-secondary btn-sm mb-0">
+            <i class="fa-solid fa-upload me-1"></i>Carregar JSON
+            <input type="file" id="inputJsonFile" accept=".json" style="display: none;" onchange="importarJSON(event)">
+          </label>
+          <button class="btn btn-outline-danger btn-sm" onclick="restaurarDadosPadrao()"><i class="fa-solid fa-rotate-left me-1"></i>Restaurar</button>
+          <button class="btn btn-primary btn-sm px-3 fw-bold" onclick="abrirModalAfastamento()"><i class="fa-solid fa-plus me-1"></i>+ Lançar Afastamento</button>
+        </div>
+      </div>
 
-        <!-- Card da Sprint Ativa -->
-        <div class="sprint-summary-card">
-          <div class="row align-items-center g-3">
-            <div class="col-lg-4 col-md-6">
-              <div class="d-flex align-items-center gap-2 mb-1">
-                <span class="badge bg-primary px-2 py-1"
-                  ><i class="fa-solid fa-flag me-1"></i>SPRINT ATIVA</span
-                >
-                <strong id="labelSprintNome">Sprint Agile</strong>
-              </div>
-              <div class="small text-muted" id="labelSprintDetalhes">
-                A calcular...
-              </div>
+      <!-- Card da Sprint Ativa -->
+      <div class="sprint-summary-card">
+        <div class="row align-items-center g-3">
+          <div class="col-lg-4 col-md-6">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge bg-primary px-2 py-1"><i class="fa-solid fa-flag me-1"></i>SPRINT ATIVA</span>
+              <strong id="labelSprintNome">Sprint Agile</strong>
             </div>
-            <div class="col-lg-4 col-md-6">
-              <div class="d-flex justify-content-between small fw-bold mb-1">
-                <span>Progresso da Sprint</span>
-                <span id="labelSprintPorcentagem" class="text-primary">0%</span>
-              </div>
-              <div class="progress-bar-custom">
-                <div
-                  class="progress-bar bg-primary progress-bar-striped progress-bar-animated"
-                  id="barProgressoSprint"
-                  style="width: 0%; height: 100%"
-                ></div>
-              </div>
+            <div class="small text-muted" id="labelSprintDetalhes">A calcular...</div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="d-flex justify-content-between small fw-bold mb-1">
+              <span>Progresso da Sprint</span>
+              <span id="labelSprintPorcentagem" class="text-primary">0%</span>
             </div>
-            <div
-              class="col-lg-4 col-md-12 d-flex align-items-center justify-content-lg-end gap-2 flex-wrap"
-            >
-              <button
-                class="btn btn-outline-danger btn-sm"
-                onclick="abrirModalFeriados()"
-              >
-                <i class="fa-solid fa-star me-1"></i>Feriados (<span
-                  id="badgeQtdFeriados"
-                  >0</span
-                >)
-              </button>
-              <button
-                class="btn btn-outline-primary btn-sm"
-                onclick="abrirModalPontosFacultativos()"
-              >
-                <i class="fa-regular fa-clock me-1"></i>Pontos Facultativos
-                (<span id="badgeQtdPF">0</span>)
-              </button>
-              <div class="d-flex align-items-center gap-1 ms-2">
-                <span class="small text-muted fw-bold">Simular:</span>
-                <input
-                  type="date"
-                  id="inputDataSimulada"
-                  class="form-control form-control-sm"
-                  style="width: 140px"
-                  onchange="alterarDataReferencia(this.value)"
-                />
-              </div>
+            <div class="progress-bar-custom">
+              <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" id="barProgressoSprint" style="width: 0%; height: 100%;"></div>
             </div>
           </div>
-        </div>
-
-        <!-- Barra de Legendas -->
-        <div class="legend-bar">
-          <div class="legend-group" id="containerLegendaTipos"></div>
-          <div class="legend-group">
-            <span class="legend-item"
-              ><span
-                class="color-box-sample"
-                style="background: var(--fds-bg); border-color: #94a3b8"
-              ></span>
-              Fim de Semana</span
-            >
-            <span class="legend-item"
-              ><span class="badge bg-danger">FER</span> Feriado</span
-            >
-            <span class="legend-item"
-              ><span class="badge bg-primary">PF</span> Ponto Facultativo</span
-            >
-          </div>
-        </div>
-
-        <!-- Gantt Board em DIV/FLEX (Sem bugs de posição) -->
-        <div class="gantt-outer-container">
-          <div class="gantt-board" id="ganttBoard">
-            <!-- Gerado via JavaScript -->
+          <div class="col-lg-4 col-md-12 d-flex align-items-center justify-content-lg-end gap-2 flex-wrap">
+            <button class="btn btn-outline-danger btn-sm" onclick="abrirModalFeriados()">
+              <i class="fa-solid fa-star me-1"></i>Feriados (<span id="badgeQtdFeriados">0</span>)
+            </button>
+            <button class="btn btn-outline-primary btn-sm" onclick="abrirModalPontosFacultativos()">
+              <i class="fa-regular fa-clock me-1"></i>Pontos Facultativos (<span id="badgeQtdPF">0</span>)
+            </button>
+            <div class="d-flex align-items-center gap-1 ms-2">
+              <span class="small text-muted fw-bold">Simular:</span>
+              <input type="date" id="inputDataSimulada" class="form-control form-control-sm" style="width: 140px;" onchange="alterarDataReferencia(this.value)">
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Modal: Lançar Afastamento -->
-    <div
-      class="modal fade"
-      id="modalAfastamento"
-      tabindex="-1"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 shadow-sm border-0 p-3">
-          <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title fw-bold" id="modalAfastamentoTitulo">
-              Novo Afastamento
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form id="formAfastamento" onsubmit="salvarAfastamento(event)">
-              <input type="hidden" id="editAfastamentoId" />
-              <div class="mb-3">
-                <label class="form-label small fw-bold">Colaborador</label>
-                <select
-                  class="form-select"
-                  id="selectColaborador"
-                  required
-                ></select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label small fw-bold">Tipo de Ausência</label>
-                <select
-                  class="form-select"
-                  id="selectTipoAusencia"
-                  required
-                ></select>
-              </div>
-              <div class="row g-2 mb-3">
-                <div class="col-6">
-                  <label class="form-label small fw-bold">Data Início</label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="inputDataInicio"
-                    required
-                  />
-                </div>
-                <div class="col-6">
-                  <label class="form-label small fw-bold">Data Fim</label>
-                  <input
-                    type="date"
-                    class="form-control"
-                    id="inputDataFim"
-                    required
-                  />
-                </div>
-              </div>
-              <div class="d-flex justify-content-end gap-2 mt-4">
-                <button
-                  type="button"
-                  class="btn btn-secondary px-3"
-                  data-bs-dismiss="modal"
-                >
-                  Cancelar
-                </button>
-                <button type="submit" class="btn btn-primary px-4 fw-bold">
-                  Confirmar
-                </button>
-              </div>
-            </form>
-          </div>
+      <!-- Barra de Legendas -->
+      <div class="legend-bar">
+        <div class="legend-group" id="containerLegendaTipos"></div>
+        <div class="legend-group">
+          <span class="legend-item"><span class="color-box-sample" style="background: var(--fds-bg); border-color: #94a3b8;"></span> Fim de Semana</span>
+          <span class="legend-item"><span class="badge bg-danger">FER</span> Feriado</span>
+          <span class="legend-item"><span class="badge bg-primary">PF</span> Ponto Facultativo</span>
+        </div>
+      </div>
+
+      <!-- Gantt Board em DIV/FLEX -->
+      <div class="gantt-outer-container">
+        <div class="gantt-board" id="ganttBoard">
+          <!-- Gerado via JavaScript -->
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal: Colaboradores -->
-    <div
-      class="modal fade"
-      id="modalColaboradores"
-      tabindex="-1"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 p-3 border-0">
-          <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold">Gerir Colaboradores</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="input-group mb-3">
-              <input
-                type="text"
-                id="novoColaboradorNome"
-                class="form-control"
-                placeholder="Nome do novo colaborador"
-              />
-              <button class="btn btn-primary" onclick="adicionarColaborador()">
-                <i class="fa-solid fa-plus me-1"></i>Adicionar
-              </button>
+  <!-- Modal: Lançar / Editar Afastamento -->
+  <div class="modal fade" id="modalAfastamento" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 shadow-sm border-0 p-3">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold" id="modalAfastamentoTitulo">Novo Afastamento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formAfastamento" onsubmit="salvarAfastamento(event)">
+            <input type="hidden" id="editAfastamentoId">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Colaborador</label>
+              <select class="form-select" id="selectColaborador" required></select>
             </div>
-            <ul class="list-group" id="listaColaboradoresModal"></ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal: Tipos de Ausência -->
-    <div class="modal fade" id="modalTipos" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 p-3 border-0">
-          <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold">Tipos de Ausência</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Tipo de Ausência</label>
+              <select class="form-select" id="selectTipoAusencia" required></select>
+            </div>
             <div class="row g-2 mb-3">
-              <div class="col-7">
-                <input
-                  type="text"
-                  id="novoTipoNome"
-                  class="form-control form-control-sm"
-                  placeholder="Nome"
-                />
+              <div class="col-6">
+                <label class="form-label small fw-bold">Data Início</label>
+                <input type="date" class="form-control" id="inputDataInicio" required>
               </div>
-              <div class="col-3">
-                <input
-                  type="color"
-                  id="novoTipoCor"
-                  class="form-control form-control-color w-100"
-                  value="#f472b6"
-                />
-              </div>
-              <div class="col-2">
-                <button
-                  class="btn btn-primary btn-sm w-100 h-100"
-                  onclick="adicionarTipoAusencia()"
-                >
-                  <i class="fa-solid fa-plus"></i>
-                </button>
+              <div class="col-6">
+                <label class="form-label small fw-bold">Data Fim</label>
+                <input type="date" class="form-control" id="inputDataFim" required>
               </div>
             </div>
-            <ul class="list-group" id="listaTiposModal"></ul>
-          </div>
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary px-4 fw-bold">Confirmar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal: Feriados -->
-    <div class="modal fade" id="modalFeriados" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content rounded-4 p-3 border-0">
-          <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold">
-              <i class="fa-solid fa-star text-danger me-2"></i>Feriados do
-              Período
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
+  <!-- Modal: Colaboradores -->
+  <div class="modal fade" id="modalColaboradores" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 p-3 border-0">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Gerir Colaboradores</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <input type="text" id="novoColaboradorNome" class="form-control" placeholder="Nome do novo colaborador">
+            <button class="btn btn-primary" onclick="adicionarColaborador()"><i class="fa-solid fa-plus me-1"></i>Adicionar</button>
           </div>
-          <div class="modal-body">
-            <div class="table-responsive">
-              <table class="table table-sm table-hover align-middle">
-                <thead class="table-light">
-                  <tr>
-                    <th>Data</th>
-                    <th>Dia da Semana</th>
-                    <th>Descrição</th>
-                    <th>Âmbito</th>
-                  </tr>
-                </thead>
-                <tbody id="tabelaFeriadosCorpo"></tbody>
-              </table>
-            </div>
-          </div>
+          <ul class="list-group" id="listaColaboradoresModal"></ul>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Modal: Pontos Facultativos -->
-    <div
-      class="modal fade"
-      id="modalPontosFacultativos"
-      tabindex="-1"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4 p-3 border-0">
-          <div class="modal-header border-0">
-            <h5 class="modal-title fw-bold">
-              <i class="fa-regular fa-clock text-primary me-2"></i>Pontos
-              Facultativos
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="row g-2 mb-3">
-              <div class="col-5">
-                <input
-                  type="date"
-                  id="novoPFData"
-                  class="form-control form-control-sm"
-                />
-              </div>
-              <div class="col-5">
-                <input
-                  type="text"
-                  id="novoPFNome"
-                  class="form-control form-control-sm"
-                  placeholder="Descrição"
-                />
-              </div>
-              <div class="col-2">
-                <button
-                  class="btn btn-primary btn-sm w-100"
-                  onclick="adicionarPontoFacultativo()"
-                >
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
+  <!-- Modal: Tipos de Ausência -->
+  <div class="modal fade" id="modalTipos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 p-3 border-0">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold">Tipos de Ausência</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col-7">
+              <input type="text" id="novoTipoNome" class="form-control form-control-sm" placeholder="Nome">
             </div>
-            <ul class="list-group" id="listaPFModal"></ul>
+            <div class="col-3">
+              <input type="color" id="novoTipoCor" class="form-control form-control-color w-100" value="#f472b6">
+            </div>
+            <div class="col-2">
+              <button class="btn btn-primary btn-sm w-100 h-100" onclick="adicionarTipoAusencia()"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+          <ul class="list-group" id="listaTiposModal"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Feriados -->
+  <div class="modal fade" id="modalFeriados" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded-4 p-3 border-0">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold"><i class="fa-solid fa-star text-danger me-2"></i>Feriados do Período</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle">
+              <thead class="table-light">
+                <tr><th>Data</th><th>Dia da Semana</th><th>Descrição</th><th>Âmbito</th></tr>
+              </thead>
+              <tbody id="tabelaFeriadosCorpo"></tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Modal: Pontos Facultativos -->
+  <div class="modal fade" id="modalPontosFacultativos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 p-3 border-0">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold"><i class="fa-regular fa-clock text-primary me-2"></i>Pontos Facultativos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col-5"><input type="date" id="novoPFData" class="form-control form-control-sm"></div>
+            <div class="col-5"><input type="text" id="novoPFNome" class="form-control form-control-sm" placeholder="Descrição"></div>
+            <div class="col-2"><button class="btn btn-primary btn-sm w-100" onclick="adicionarPontoFacultativo()"><i class="fa-solid fa-plus"></i></button></div>
+          </div>
+          <ul class="list-group" id="listaPFModal"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
